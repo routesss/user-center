@@ -1,0 +1,19 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/user_center?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8
+    username: root
+    password: 123456
+
+logging:
+  level:
+    root: info
+    com.sola.mybatis_plus_demo.dao.user: trace
+  pattern:
+    console: '%p%m%n'
+mybatis-plus:
+  global-config:
+    db-config:
+      id-type: id_worker
+      logic-not-delete-value: 0
+      logic-delete-value: 1
