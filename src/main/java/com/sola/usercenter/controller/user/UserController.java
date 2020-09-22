@@ -1,15 +1,15 @@
 package com.sola.usercenter.controller.user;
 
-
-import com.alibaba.fastjson.JSONObject;
-import com.sola.usercenter.domain.entity.user.User;
-import com.sola.usercenter.service.user.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import com.sola.usercenter.controller.util.IResult;
+import com.sola.usercenter.controller.util.Result;
+import com.sola.usercenter.domain.entity.user.User;
+import com.sola.usercenter.service.user.IUserService;
 
 /**
  * <p>
@@ -26,13 +26,12 @@ public class UserController {
     @Autowired
     private IUserService userService;
 
-    @RequestMapping("/test")
-    public String userTest(){
+    @GetMapping("/{id}")
+    public IResult userTest(@PathVariable("id") Integer userId) {
 
-        List<User> allUser = userService.getAllUser();
-        System.out.println(JSONObject.toJSONString(allUser));
+        User user = userService.getById(userId);
 
-        return "OK";
+        return Result.ok(user);
     }
 
 }
