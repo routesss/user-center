@@ -9,21 +9,21 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Result implements Serializable, IResult {
+public class Result<T> implements Serializable, IResult {
     private static final long serialVersionUID = 1L;
 
     private String message;
 
     private Integer code;
 
-    private Object data;
+    private T data;
 
     public Result(ResultCode resultCode) {
         this.code = resultCode.getCode();
         this.message = resultCode.getMessage();
     }
 
-    public Result(ResultCode resultCode, Object data) {
+    public Result(ResultCode resultCode, T data) {
         this.code = resultCode.getCode();
         this.message = resultCode.getMessage();
         this.data = data;
@@ -33,7 +33,7 @@ public class Result implements Serializable, IResult {
         return new Result(ResultCode.SUCCESS);
     }
 
-    public static Result ok(Object data) {
+    public static<T> Result ok(T data) {
         return new Result(ResultCode.SUCCESS, data);
     }
 

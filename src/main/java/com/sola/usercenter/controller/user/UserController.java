@@ -27,11 +27,11 @@ public class UserController {
     private IUserService userService;
 
     @GetMapping("/{id}")
-    public IResult userTest(@PathVariable("id") Integer userId) {
+    public User userTest(@PathVariable("id") Integer userId) {
 
         User user = userService.getById(userId);
 
-        return Result.ok(user);
+        return user;
     }
 
 }
