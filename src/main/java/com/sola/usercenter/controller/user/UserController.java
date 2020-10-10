@@ -6,10 +6,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.sola.usercenter.controller.util.IResult;
-import com.sola.usercenter.controller.util.Result;
 import com.sola.usercenter.domain.entity.user.User;
 import com.sola.usercenter.service.user.IUserService;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * <p>
@@ -19,6 +19,7 @@ import com.sola.usercenter.service.user.IUserService;
  * @author jobob
  * @since 2020-09-20
  */
+@Slf4j
 @RestController
 @RequestMapping("/user")
 public class UserController {
@@ -29,6 +30,7 @@ public class UserController {
     @GetMapping("/{id}")
     public User userTest(@PathVariable("id") Integer userId) {
 
+        log.info("请求 。。..");
         User user = userService.getById(userId);
 
         return user;

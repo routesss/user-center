@@ -4,12 +4,23 @@ spring:
   cloud:
     nacos:
       discovery:
+        #nacos地址
         server-addr: localhost:8848
+        #指定名称空间
+        namespace: 747695a5-8f62-4a66-b93a-fb296f235a3a
+        #指定集群名称
+        cluster-name: BJ
+        #服务实例元数据 [同一个服务的隔离实现]
+        metadata:
+          instance: SH213
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://127.0.0.1:3306/user_center?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8
     username: root
     password: 123456
+
+server:
+  port: 8080
 
 logging:
   level:
@@ -23,5 +34,3 @@ mybatis-plus:
       id-type: id_worker
       logic-not-delete-value: 0
       logic-delete-value: 1
-server:
-  port: 8080
