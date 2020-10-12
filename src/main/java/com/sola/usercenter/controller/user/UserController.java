@@ -11,6 +11,8 @@ import com.sola.usercenter.service.user.IUserService;
 
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.List;
+
 /**
  * <p>
  * 分享 前端控制器
@@ -27,13 +29,20 @@ public class UserController {
     @Autowired
     private IUserService userService;
 
-    @GetMapping("/{id}")
+    @GetMapping(value = "/{id}")
     public User userTest(@PathVariable("id") Integer userId) {
 
         log.info("请求 。。..");
         User user = userService.getById(userId);
 
         return user;
+    }
+
+
+    @GetMapping(value = "/queryUser")
+    public List<User> queryUser(User user) {
+        List<User> userList = userService.getUser(user);
+        return userList;
     }
 
 }
