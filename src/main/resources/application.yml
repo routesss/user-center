@@ -12,7 +12,11 @@ spring:
         cluster-name: BJ
         #服务实例元数据 [同一个服务的隔离实现]
         metadata:
-          instance: SH213
+          instance: BJ213
+    sentinel:
+      transport:
+        port: 8719
+        dashboard: 127.0.0.1:8080
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://127.0.0.1:3306/user_center?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8
@@ -20,7 +24,7 @@ spring:
     password: 123456
 
 server:
-  port: 8080
+  port: 8020
 
 logging:
   level:
@@ -34,3 +38,9 @@ mybatis-plus:
       id-type: id_worker
       logic-not-delete-value: 0
       logic-delete-value: 1
+#actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
