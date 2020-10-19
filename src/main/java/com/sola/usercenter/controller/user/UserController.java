@@ -1,5 +1,12 @@
 package com.sola.usercenter.controller.user;
 
+import com.alibaba.csp.sentinel.Entry;
+import com.alibaba.csp.sentinel.SphU;
+import com.alibaba.csp.sentinel.Tracer;
+import com.alibaba.csp.sentinel.annotation.SentinelResource;
+import com.alibaba.csp.sentinel.context.ContextUtil;
+import com.alibaba.csp.sentinel.slots.block.BlockException;
+import com.sola.usercenter.sentinel.resource.block.handeler.TestBlockHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,6 +18,7 @@ import com.sola.usercenter.service.user.IUserService;
 
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -40,9 +48,39 @@ public class UserController {
 
 
     @GetMapping(value = "/queryUser")
+    @SentinelResource(value = "queryUser", blockHandlerClass = TestBlockHandler.class, blockHandler = "blockHandler")
     public List<User> queryUser(User user) {
-        List<User> userList = userService.getUser(user);
-        return userList;
+
+        return userService.getUser(user);
     }
+
+    /*@GetMapping(value = "/queryUser")
+    public List<User> queryUser(User user) {
+
+        Entry entry = null ;
+        List<User> userList = new ArrayList<>();
+
+        String resourceName = "queryUser";
+
+        //资源名 来源名称
+        ContextUtil.enter(resourceName, "userCenterBJ");
+
+        try {
+            //指定sentinel保护的资源 名称是queryUser
+            entry = SphU.entry(resourceName);
+            userList = userService.getUser(user);
+        } catch (BlockException e) {
+            e.printStackTrace();
+        }catch (IllegalArgumentException e){
+            //统计其他异常
+            Tracer.trace(e);
+        }finally {
+            if(entry != null){
+                entry.exit();
+            }
+            ContextUtil.exit();
+        }
+        return userList;
+    }*/
 
 }
