@@ -18,6 +18,7 @@ import com.sola.usercenter.service.user.IUserService;
 
 import lombok.extern.slf4j.Slf4j;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,6 +39,7 @@ public class UserController {
     private IUserService userService;
 
     @GetMapping(value = "/{id}")
+    @SentinelResource(value = "getUser")
     public User userTest(@PathVariable("id") Integer userId) {
 
         log.info("请求 。。..");
@@ -46,6 +48,14 @@ public class UserController {
         return user;
     }
 
+    @GetMapping(value = "/testTracsactionInsert")
+    public User testTransactionInsert(){
+        User user = new User();
+        user.setWxNickname("test " + System.currentTimeMillis());
+        user.setCreateTime(LocalDateTime.now());
+        user.setUpdateTime(LocalDateTime.now());
+        return userService.testTransactionInsert(user);
+    }
 
     @GetMapping(value = "/queryUser")
     @SentinelResource(value = "queryUser", blockHandlerClass = TestBlockHandler.class, blockHandler = "blockHandler")

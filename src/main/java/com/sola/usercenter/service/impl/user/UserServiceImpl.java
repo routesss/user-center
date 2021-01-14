@@ -7,7 +7,11 @@ import com.sola.usercenter.domain.entity.user.User;
 import com.sola.usercenter.mapper.user.UserMapper;
 import com.sola.usercenter.service.user.IUserService;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import java.util.List;
 
@@ -22,6 +26,9 @@ import java.util.List;
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IUserService {
 
+    @Autowired
+    private PlatformTransactionManager transactionManager;
+
     public List<User> getAllUser() {
         LambdaQueryWrapper<User> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         return baseMapper.selectList(lambdaQueryWrapper);
@@ -33,4 +40,24 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         return baseMapper.selectList(lambdaQueryWrapper);
     }
 
+    /**
+     * 测试代码形式事务
+     * @return
+     */
+    public User testTransactionInsert(User user){
+
+        DefaultTransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
+        TransactionStatus transaction = transactionManager.getTransaction(transactionDefinition);
+
+        try{
+            this.baseMapper.insert(user);
+            transactionManager.commit(transaction);
+
+        }catch (Exception e){
+            transactionManager.rollback(transaction);
+            throw e;
+        }
+
+        return user;
+    }
 }

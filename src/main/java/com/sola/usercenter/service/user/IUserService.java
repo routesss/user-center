@@ -17,4 +17,6 @@ public interface IUserService extends IService<User> {
     List<User> getAllUser();
 
     List<User> getUser(User user);
+
+    User testTransactionInsert(User user);
 }
