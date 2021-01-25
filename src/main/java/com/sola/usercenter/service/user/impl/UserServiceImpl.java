@@ -1,11 +1,7 @@
-package com.sola.usercenter.service.impl.user;
+package com.sola.usercenter.service.user.impl;
 
+import java.util.List;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.sola.usercenter.domain.entity.user.User;
-import com.sola.usercenter.mapper.user.UserMapper;
-import com.sola.usercenter.service.user.IUserService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,7 +9,11 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 
-import java.util.List;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.sola.usercenter.domain.entity.user.User;
+import com.sola.usercenter.mapper.user.UserMapper;
+import com.sola.usercenter.service.user.IUserService;
 
 /**
  * <p>
@@ -36,24 +36,26 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     public List<User> getUser(User user) {
         LambdaQueryWrapper<User> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        lambdaQueryWrapper.eq(user.getId() != null, User::getId, user.getId()).eq(StringUtils.isNotEmpty(user.getWxNickname()), User::getWxNickname, user.getWxNickname());
+        lambdaQueryWrapper.eq(user.getId() != null, User::getId, user.getId())
+            .eq(StringUtils.isNotEmpty(user.getWxNickname()), User::getWxNickname, user.getWxNickname());
         return baseMapper.selectList(lambdaQueryWrapper);
     }
 
     /**
      * 测试代码形式事务
+     * 
      * @return
      */
-    public User testTransactionInsert(User user){
+    public User testTransactionInsert(User user) {
 
         DefaultTransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
         TransactionStatus transaction = transactionManager.getTransaction(transactionDefinition);
 
-        try{
+        try {
             this.baseMapper.insert(user);
             transactionManager.commit(transaction);
 
-        }catch (Exception e){
+        } catch (Exception e) {
             transactionManager.rollback(transaction);
             throw e;
         }

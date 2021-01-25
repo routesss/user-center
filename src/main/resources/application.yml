@@ -5,7 +5,7 @@ spring:
     nacos:
       discovery:
         #nacos地址
-        server-addr: 192.168.0.113
+        server-addr: 127.0.0.1:8848
         #指定名称空间
         namespace: 747695a5-8f62-4a66-b93a-fb296f235a3a
         #指定集群名称
@@ -18,7 +18,7 @@ spring:
         port: 8719
         dashboard: 127.0.0.1:8080
       filter:
-        enabled: false
+        enabled: true
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://127.0.0.1:3306/user_center?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8
@@ -46,3 +46,6 @@ management:
     web:
       exposure:
         include: '*'
+
+rocketmq:
+  name-server: 127.0.0.1:9876

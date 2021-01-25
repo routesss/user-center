@@ -1,19 +1,16 @@
 package com.sola.usercenter.controller.user;
 
-import com.alibaba.csp.sentinel.Entry;
-import com.alibaba.csp.sentinel.SphU;
-import com.alibaba.csp.sentinel.Tracer;
-import com.alibaba.csp.sentinel.annotation.SentinelResource;
-import com.alibaba.csp.sentinel.context.ContextUtil;
-import com.alibaba.csp.sentinel.slots.block.BlockException;
-import com.sola.usercenter.sentinel.resource.block.handeler.TestBlockHandler;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import com.sola.usercenter.domain.entity.user.User;
+import com.sola.usercenter.sentinel.resource.block.handeler.TestBlockHandler;
 import com.sola.usercenter.service.user.IUserService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -58,7 +55,7 @@ public class UserController {
     }
 
     @GetMapping(value = "/queryUser")
-    @SentinelResource(value = "queryUser", blockHandlerClass = TestBlockHandler.class, blockHandler = "blockHandler")
+    @SentinelResource(value = ".", blockHandlerClass = TestBlockHandler.class, blockHandler = "blockHandler")
     public List<User> queryUser(User user) {
 
         return userService.getUser(user);
