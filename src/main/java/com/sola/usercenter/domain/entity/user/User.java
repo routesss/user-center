@@ -1,12 +1,12 @@
 package com.sola.usercenter.domain.entity.user;
 
+import java.io.Serializable;
+import java.time.LocalDateTime;
+
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 
-import java.time.LocalDateTime;
-import java.io.Serializable;
+import lombok.*;
 
 /**
  * <p>
@@ -18,6 +18,9 @@ import java.io.Serializable;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -62,6 +65,5 @@ public class User implements Serializable {
      * 积分
      */
     private Integer bonus;
-
 
 }

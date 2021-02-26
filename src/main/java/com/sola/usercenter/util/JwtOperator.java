@@ -1,4 +1,7 @@
+package com.sola.usercenter.util;
+
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.crypto.SecretKey;
@@ -6,6 +9,8 @@ import javax.crypto.SecretKey;
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import com.google.common.collect.Maps;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
@@ -114,14 +119,14 @@ public class JwtOperator {
         jwtOperator.secret = "aaabbbcccdddeeefffggghhhiiijjjkkklllmmmnnnooopppqqqrrrsssttt";
 
         // 2.设置用户信息
-        /*HashMap<String, Object> objectObjectHashMap = Maps.newHashMap();
+        HashMap<String, Object> objectObjectHashMap = Maps.newHashMap();
         objectObjectHashMap.put("id", "1");
-        
+
         // 测试1: 生成token
         String token = jwtOperator.generateToken(objectObjectHashMap);
         // 会生成类似该字符串的内容:
         // eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjEiLCJpYXQiOjE1NjU1ODk4MTcsImV4cCI6MTU2Njc5OTQxN30.27_QgdtTg4SUgxidW6ALHFsZPgMtjCQ4ZYTRmZroKCQ
-        System.out.println(token);*/
+        System.out.println(token);
 
         // 将我改成上面生成的token!!!
         String someToken =

@@ -53,5 +53,8 @@ jwt:
   # 有效期，单位秒，默认2周
   expire-time-in-second: 1209600
 
+swagger:
+  enabled: true
+
 rocketmq:
   name-server: 127.0.0.1:9876
