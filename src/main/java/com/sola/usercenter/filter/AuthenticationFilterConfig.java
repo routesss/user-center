@@ -1,7 +1,8 @@
-package com.sola.usercenter.filter;
+package com.sola.contentcenter.filter;
 
 import java.lang.reflect.Method;
 import java.util.Enumeration;
+import java.util.Objects;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -18,6 +19,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.alibaba.fastjson.JSONObject;
 import com.sola.usercenter.annotation.Authentication;
+import com.sola.usercenter.annotation.AuthenticationRole;
 import com.sola.usercenter.util.JwtOperator;
 
 import io.jsonwebtoken.Claims;
@@ -26,41 +28,79 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Aspect
 @Component
-public class LoginFilterConfig {
+public class AuthenticationFilterConfig {
 
     @Autowired
     private JwtOperator jwtOperator;
 
     /**
-     * 拦截Authentication注解
-     * 
+     * 拦截Authentication注解 检查token是否合法
+     *
      * @param point
      * @return
      */
     @Around("@annotation(com.sola.usercenter.annotation.Authentication)")
     public Object around(ProceedingJoinPoint point) throws Throwable {
+        tokenHandle();
+        return point.proceed();
+    }
 
+    /**
+     * 检查token role权限是否匹配
+     *
+     * @param point
+     * @return
+     * @throws Throwable
+     */
+    @Around("@annotation(com.sola.usercenter.annotation.AuthenticationRole)")
+    public Object aroundRole(ProceedingJoinPoint point) throws Throwable {
+        tokenHandle();
+
+        // 获取token中role信息
         RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
         ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes)requestAttributes;
         HttpServletRequest request = servletRequestAttributes.getRequest();
+        String role = request.getAttribute("role").toString();
 
-        String token = request.getHeader("X-Token");
-        // 检查token
-        Boolean isValid = jwtOperator.validateToken(token);
-        if (!isValid) {
-            // token不合法抛出异常
-            throw new SecurityException("token不合法");
+        // 获取方法，此处可将signature强转为MethodSignature
+        MethodSignature signature = (MethodSignature)point.getSignature();
+        Method method = signature.getMethod();
+        AuthenticationRole annotation = method.getAnnotation(AuthenticationRole.class);
+        String roleValue = annotation.value();
+
+        // 检查role是否匹配
+        if (!Objects.equals(role, roleValue)) {
+            throw new SecurityException("权限不匹配无法访问");
         }
 
-        // 获取用户信息
-        Claims claims = jwtOperator.getClaimsFromToken(token);
-        request.setAttribute("id", claims.get("id"));
-        request.setAttribute("wxNickName", claims.get("wxNickName"));
-        request.setAttribute("role", claims.get("role"));
-
-        log.info("token {}", token);
-
         return point.proceed();
+    }
+
+    /**
+     * 处理token信息
+     */
+    public void tokenHandle() {
+        try {
+            RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
+            ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes)requestAttributes;
+            HttpServletRequest request = servletRequestAttributes.getRequest();
+
+            String token = request.getHeader("X-Token");
+            // 检查token
+            Boolean isValid = jwtOperator.validateToken(token);
+            if (!isValid) {
+                // token不合法抛出异常
+                throw new SecurityException("token不合法");
+            }
+
+            // 获取用户信息
+            Claims claims = jwtOperator.getClaimsFromToken(token);
+            request.setAttribute("id", claims.get("id"));
+            request.setAttribute("wxNickName", claims.get("wxNickName"));
+            request.setAttribute("role", claims.get("role"));
+        } catch (Exception e) {
+            throw new SecurityException("token不合法");
+        }
     }
 
     // 弃用

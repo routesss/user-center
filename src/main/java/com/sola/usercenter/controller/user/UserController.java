@@ -82,15 +82,16 @@ public class UserController {
 
         if (user == null) {
             // 插入数据
-            User build = User.builder().roles("user").bonus(0).wxId(param.getWxId()).wxNickname("测试")
+            user = User.builder().roles("user").bonus(0).wxId(param.getWxId()).wxNickname("测试")
                 .createTime(LocalDateTime.now()).updateTime(LocalDateTime.now()).build();
-            this.userService.save(build);
+            this.userService.save(user);
         }
         // 生成token
 
         HashMap<String, Object> claims = Maps.newHashMap();
-        claims.put("wxId", param.getWxId());
-        claims.put("wxNickname", param.getWxNickname());
+        claims.put("wxId", user.getWxId());
+        claims.put("wxNickname", user.getWxNickname());
+        claims.put("role", user.getRoles());
         String token = jwtOperator.generateToken(claims);
 
         return LoginUserResponseVo.builder().token(token).build();
